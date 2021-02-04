@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+
+</head>
+
+<body>
+    <ul>
+        <li>
+            #for(employee in employees):
+                <li>#(employee.firstName)
+                </li>
+            #endfor
+        </li>
+    </ul>
+
+<h2> Add new employee </h2>
+<form method = "post" action ="/add">
+<p> First Name: <input type = "text" firstName = "firstName" /></p>
+<p> Last Name: <input type = "text" lastName = "lastName" /></p>
+<button type = "submit">Add</button>
+</form>
+</body>
+</html>

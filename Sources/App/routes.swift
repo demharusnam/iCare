@@ -9,6 +9,16 @@ func routes(_ app: Application) throws {
     app.get("hello") { req -> String in
         return "Hello, world!"
     }
+    
+    app.get("employees") {req -> EventLoopFuture<View> in
+        let josh = Employee(firstName: "Josh", lastName: "Taraba")
+        return req.view.render("employees", ["employees":[josh]])
+    }
 
-    try app.register(collection: TodoController())
+    app.post("employees") {req -> EventLoopFuture<Employee> in
+        let employee = try req.content.decode(Employee.self)
+        
+        return employee.save(on: req.db).map{employee}
+    }
+
 }
