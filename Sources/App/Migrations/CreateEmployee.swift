@@ -14,9 +14,9 @@ struct CreateEmployee: Migration{
             .id()
             .field("firstName", .string, .required)
             .field("lastName", .string, .required)
-            
             .create()
     }
+    
     func revert(on database: Database) -> EventLoopFuture<Void> {
         database.schema("employees").delete()
     }

@@ -5,12 +5,12 @@
 //  Created by Josh Taraba on 2021-02-02.
 //
 
-import Foundation
 import Fluent
 import Vapor
 
-final class Patient: Model, Content{
+final class Patient: Model, Content {
     static let schema = "patients"
+    
     @ID(key: .id)
     var id: UUID?
     
@@ -23,12 +23,17 @@ final class Patient: Model, Content{
     @Field(key: "lastName")
     var lastName: String
     
-    init(){}
-    init(id: UUID? = nil, patientID: Int, firstName: String, lastName: String){
+    @Field(key: "role")
+    var role: Role
+    
+    init() {}
+    
+    init(id: UUID? = nil, patientID: Int, firstName: String, lastName: String) {
         self.id = id
         self.patientID = patientID
         self.firstName = firstName
         self.lastName = lastName
+        self.role = .patient
     }
 }
 
