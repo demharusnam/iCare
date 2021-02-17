@@ -8,7 +8,7 @@
 import Fluent
 import Vapor
 
-final class Employee: Model, Employee {
+final class Employee: Model {
     static let schema = "employees"
 
     @ID(key: .id)
@@ -23,17 +23,21 @@ final class Employee: Model, Employee {
     @Field(key: "employeeID")
     var employeeID: Int
     
-    @Field(key: "role")
+    @Field(key: "password")
+    var password: String
+    
+    @Enum(key: "role")
     var role: Role
     
     init() {}
 
-    init(id: UUID? = nil, firstName: String, lastName: String, employeeID: Int) {
+    init(id: UUID? = nil, firstName: String, lastName: String, employeeID: Int, password: String, role: Role) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
         self.employeeID = employeeID
-        self.role = .doctor
+        self.password = password
+        self.role = role
     }
 }
 

@@ -8,12 +8,18 @@
 import Vapor
     
 enum Role: String {
+    static let schema = "role"
+    
     // add more as required
-    case doctor = "Doctor"
-    case patient = "Patient"
-    case visitor = "Visitor"
-    case nurse = "Nurse"
-    case employee = "Employee" // general employee?
+    case doctor
+    
+    case patient
+    
+    case visitor
+    
+    case nurse
+    
+    case employee
     
     var clearance: Int {
         switch self {
