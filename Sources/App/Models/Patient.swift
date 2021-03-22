@@ -1,34 +1,45 @@
 //
-//  File.swift
+//  Patient.swift
 //  
 //
 //  Created by Josh Taraba on 2021-02-02.
 //
 
-import Foundation
-import Fluent
 import Vapor
+import Fluent
 
-final class Patient: Model, Content{
+final class Patient: Model {
     static let schema = "patients"
+    
     @ID(key: .id)
     var id: UUID?
     
-    @Field(key: "patientID")
-    var patientID: Int
-
     @Field(key: "firstName")
     var firstName: String
-    
+
     @Field(key: "lastName")
     var lastName: String
     
-    init(){}
-    init(id: UUID? = nil, patientID: Int, firstName: String, lastName: String){
+    @Field(key: "patientID")
+    var patientID: Int
+    
+    @Field(key: "password")
+    var password: String
+    
+    @Enum(key: "role")
+    var role: Role
+    
+    init() {}
+    
+    init(id: UUID? = nil, firstName: String, lastName: String, patientID: Int, password: String) {
         self.id = id
-        self.patientID = patientID
         self.firstName = firstName
         self.lastName = lastName
+        self.patientID = patientID
+        self.password = password
+        self.role = .patient
     }
 }
+
+extension Patient: Content {}
 
