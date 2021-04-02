@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+</head>
+<link rel = "stylesheet" href = "/styles/index.css">
+<body>
+    <div class = "loginbox">
+        <h1> Login </h1>
+        <form> 
+            <p>Username: </p>
+            <input type="text" name ="">
+
+
+            <p>Password: </p>
+            <input type="password" name = ""><br>
+
+
+            <input type = "submit" name = "login" value = "Login"><br>
+
+            <a href = "#"> Create New Account</a>
+        </form>
+    </div>
+</body>
+</html>
+
