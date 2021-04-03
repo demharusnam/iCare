@@ -10,5 +10,4 @@ struct TodoController: RouteCollection {
     func indexHandler(_ req: Request) -> EventLoopFuture<View> {
         return req.view.render("index")
     }
-    
 }

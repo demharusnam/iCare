@@ -10,12 +10,7 @@ import Fluent
 struct CreatePatient: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.enum(Role.schema)
-            .case("nurse")
-            .case("doctor")
-            .case("patient")
-            .case("employee")
-            .case("visitor")
-            .create()
+            .read()
             .flatMap { role in
                 database.schema(Patient.schema)
                     .id()
