@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet" />
+        <link href="/css/account.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="v242_85">
+            <div class="v242_86">
+                <div class="v242_87">
+                    <img src = "/images/v242_87.png">
+        </div>
+                <div class="v242_88">
+                </div><div class="v242_89">
+                </div><div class="v242_90">
+                    <div class="v242_91"></div>
+                    <span class="v242_92">Profile</span>
+                </div>
+                <div class="v242_93">
+                    <div class="v242_94">
+                    </div>
+                    <span class="v242_95">Appoinemnt</span>
+                </div>
+                <div class="v242_96">
+                    <div class="v242_97">
+                    </div>
+                    <span class="v242_98">Notifications</span>
+                </div>
+                <div class="v242_99">
+                    <div class="v242_100">
+                    </div>
+                    <span class="v242_101">Check-in</span>
+                </div>
+                <div class="v242_102">
+                    <div class="v242_103">
+                    </div>
+                    <span class="v242_104">Visiting Hours</span>
+                </div>
+                <div class="v242_105">
+                    <div class="v242_106">
+                        <div class="v242_107">
+                        </div><div class="v242_108">
+                        </div>
+                    </div>
+                </div>
+                <div class="v242_109">
+                    <div class="v242_110">
+                    </div>
+                    <span class="v242_112">Contact Details</span>
+                    <span class="v242_113">Email:</span>
+                    <span class="v242_114">Phone Number:</span>
+                    <span class="v242_115">Birthday:</span>
+                    <span class="v242_116">Health Card No.:</span>
+                    <span class="v242_117">Address:</span>
+                    <span class="v242_118">City:</span>
+                    <span class="v242_119">Postal Code:</span>
+                    <span class="v242_120">Province:</span>
+                </div>
+                <span class="v242_121">Emergency Contact Name:</span>
+                <span class="v242_122">Emergency Contact Number:</span>
+                <div class="v242_123">
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

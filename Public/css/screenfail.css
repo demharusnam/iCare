@@ -1,0 +1,65 @@
+.navbar{
+    background-color: #376D4B;
+}
+
+.navbar .header{
+    color: #81CE9D;
+    font-size: 32px;
+    margin: auto;
+}
+
+.info {
+    background-color: #81CE9D;
+    width: 750px;
+    border-radius:30px;
+    width: 50%;
+    padding: 15px;
+    position: absolute;
+    top: 200px;
+    left: 470px;
+    margin: auto;
+}
+
+.infoWords {
+    text-align: center;
+    font-size: 28px;
+    color: #376D4B;
+}
+.sbtn {
+    margin: auto;
+    text-align: center;
+    padding: 50px;
+    position:absolute;
+    top: 500px;
+    left: 800px;
+    font-size: 15px;
+}
+
+.sbtn input {
+    background-color: #376D4B;
+    text-decoration: none;
+    border-radius: 20px;
+    color: #81CE9D;
+    cursor: pointer;
+    border: none;
+    font-size: 20px;
+}
+
+.sbtn input:hover{
+    opacity: 0.8;
+}
+
+.radio-inline {
+    color: #376D4B;
+    font-size: 20px;
+    padding: 20px;
+}
+
+@media (max-width: 599px){}
+@media (max-width: 600px){}
+@media (max-width: 900px){}
+@media (max-width: 1200px){}
+@media (max-width: 1800px){}
+
+
+

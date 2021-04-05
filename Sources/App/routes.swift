@@ -18,12 +18,22 @@ func routes(_ app: Application) throws {
 //        return req.view.render("screening")
 //    }
 //
-//
+// 
     
     
     app.get("login") { req -> EventLoopFuture<View> in
         return req.view.render("login")
     }
+    
+    app.get("account") { req -> EventLoopFuture<View> in
+        return req.view.render("account")
+    }
+    
+    app.get("screenfail") { req -> EventLoopFuture<View> in
+        return req.view.render("screenfail")
+    }
+    
+    
     
     let websiteController = TodoController()
     try app.register(collection: websiteController)

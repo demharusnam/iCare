@@ -19,8 +19,8 @@
     <h3> Do you answer yes to any of the following questions:</h3>
     <p>Are you experiencing any COVID-19 like symptons?<br><br>
     Have you been outside the country in the last 14 days?<br><br>
-    Have you been in contact with anyone thats tested positive for COVID-19<br><br>
-    Have you tested positive for COVID-19 within the last 14 days?</p>
+    Have you tested positive for COVID-19 within the last 14 days?<br><br>
+    Have you been in contact with anyone thats tested positive for COVID-19?</p>
 
 <form method="post">
     <label class = "radio-inline" for = "answer">
