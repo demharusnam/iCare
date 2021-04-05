@@ -1,7 +1,7 @@
 import Fluent
 import Vapor
 
-final class Employee: Model{
+final class Employee: Model, Content {
     static let schema = "employees"
     
     @ID(key: .id)
@@ -12,13 +12,67 @@ final class Employee: Model{
     
     @Field(key: "lastName")
     var lastName: String
-
-    init() { }
+    
+    @Field(key: "username")
+    var username: String
+    
+    @Field(key: "password")
+    var password: String
+    
+    init() {}
 
     init(id: UUID? = nil, firstName: String, lastName: String) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
     }
+    
+    final class Public: Content {
+        var id: UUID?
+        var firstName: String
+        var lastName: String
+        var username: String
+        
+        init(id: UUID?, firstName: String, lastName: String, username: String) {
+            self.id = id
+            self.firstName = firstName
+            self.lastName = lastName
+            self.username = username
+        }
+    }
 }
-extension Employee: Content{}
+
+extension Employee {
+    func convertToPublic() -> Employee.Public {
+        return Employee.Public(id: id, firstName: firstName, lastName: lastName, username: username)
+    }
+}
+
+extension EventLoopFuture where Value: Employee {
+    func convertToPublic() -> EventLoopFuture<Employee.Public> {
+        return self.map { employee in
+            return employee.convertToPublic()
+        }
+    }
+}
+
+extension Collection where Element: Employee {
+    func convertToPublic() -> [Employee.Public] {
+        return self.map { $0.convertToPublic() }
+    }
+}
+
+extension EventLoopFuture where Value == Array<Employee> {
+    func convertToPublic() -> EventLoopFuture<[Employee.Public]> {
+        return self.map { $0.convertToPublic() }
+    }
+}
+
+extension User: ModelAuthenticatable {
+    static let usernameKey = \Employee.$username
+    static let passwordHashKey = \Employee.$password
+    
+    func verify(password: String) throws -> Bool {
+        try Bcrypt.verify(password, created: self.password)
+    }
+}
