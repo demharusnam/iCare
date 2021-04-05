@@ -1,5 +1,4 @@
 import Fluent
-import FluentPostgresDriver
 import Vapor
 import Leaf
 import FluentSQLiteDriver
@@ -15,6 +14,7 @@ public func configure(_ app: Application) throws {
     
     app.migrations.add(CreateEmployee())
     app.migrations.add(CreatePatient())
+    
     app.logger.logLevel = .debug
     try app.autoMigrate().wait()
 

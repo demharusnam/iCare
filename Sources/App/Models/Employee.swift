@@ -1,15 +1,22 @@
+//
+//  Employee.swift
+//  
+//
+//  Created by Mansur Ahmed on 2021-02-12.
+//
+
 import Fluent
 import Vapor
 
 final class Employee: Model, Content {
     static let schema = "employees"
-    
+
     @ID(key: .id)
     var id: UUID?
 
     @Field(key: "firstName")
     var firstName: String
-    
+
     @Field(key: "lastName")
     var lastName: String
     
@@ -19,12 +26,18 @@ final class Employee: Model, Content {
     @Field(key: "password")
     var password: String
     
+    @Enum(key: "role")
+    var role: Role
+    
     init() {}
 
-    init(id: UUID? = nil, firstName: String, lastName: String) {
+    init(id: UUID? = nil, firstName: String, lastName: String, username: String, password: String) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
+        self.username = username
+        self.password = password
+        self.role = .employee
     }
     
     final class Public: Content {
