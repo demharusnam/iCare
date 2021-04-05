@@ -14,14 +14,11 @@ func routes(_ app: Application) throws {
     }
     
     
-    app.get("screen") {req -> EventLoopFuture<View> in
-        return req.view.render("screening")
-    }
-    
-    app.get("screen?q1=no1&q2=no2&q3=no3&q4=no4") { req -> EventLoopFuture<View> in
-        return req.view.render("login")   
-    }
-    
+//    app.get("screen") {req -> EventLoopFuture<View> in
+//        return req.view.render("screening")
+//    }
+//
+//
     
     
     app.get("login") { req -> EventLoopFuture<View> in

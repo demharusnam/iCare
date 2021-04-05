@@ -16,50 +16,25 @@
     
 </body>
 <div class = "questions">
-<form>
-    <p>
-    Are you experiencing any COVID-19 like symptons? <p>
-    <label class = "radio-inline" for = "yes1">
+    <h3> Do you answer yes to any of the following questions:</h3>
+    <p>Are you experiencing any COVID-19 like symptons?<br><br>
+    Have you been outside the country in the last 14 days?<br><br>
+    Have you been in contact with anyone thats tested positive for COVID-19<br><br>
+    Have you tested positive for COVID-19 within the last 14 days?</p>
+<form method="post">
+    <label class = "radio-inline" for = "answer">
         Yes
-    <input type = "radio" name = "q1" id = "yes1" value = "yes1">
+    <input type = "radio" name = "answer"  id = "answer" value="true"/>
     </label>
-    <label class = "radio-inline" for = "no1">
+    <label class = "radio-inline" for = "answer">
         No
-    <input type = "radio" name = "q1" id = "no1" value = "no1">
+    <input type = "radio" name = "answer" id = "answer" value="false" />
     </label>
     
-    <p> Have you travelled outside the country in the past 14 days? </p>
-    <label class = "radio-inline" for = "yes2">
-        Yes
-    <input type = "radio" name = "q2" id = "yes2" value = "yes2">
-    </label>
-    <label class = "radio-inline" for = "no2">
-        No
-    <input type = "radio" name = "q2" id = "no2" value = "no2">
-    </label>
-
-    <p> Have you been in close contact with someone who has tested positive for COVID-19? <p>
-    <label class = "radio-inline" for = "yes3">
-        Yes
-    <input type = "radio" name = "q3" id = "yes3" value = "yes3">
-    </label>
-    <label class = "radio-inline" for = "no">
-        No
-    <input type = "radio" name = "q3" id = "no3" value = "no3">
-    </label>
-
-    <p> Have you tested positive for COVID-19 in the past 14 days? <p>
-    <label class = "radio-inline" for = "yes4">
-        Yes
-    <input type = "radio" name = "q4" id = "yes4" value = "yes4">
-    </label>
-    <label class = "radio-inline" for = "no4">
-        No
-    <input type = "radio" name = "q4" id = "no4" value = "no4">
-    </label>
     <br>
     
-    <input class = "submit" type = "submit" id = "submit" value = "Submit">
+    <input class = "submit" type = "submit" value = "Submit"/>
+    
 </form>
 </div>
 
