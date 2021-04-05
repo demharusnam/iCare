@@ -10,6 +10,7 @@ import Vapor
 
 final class Patient: Model, Content {
     static let schema = "patients"
+    
     @ID(key: .id)
     var id: UUID?
     

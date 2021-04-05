@@ -13,7 +13,8 @@ struct CreateEmployee: Migration {
             .id()
             .field("firstName", .string, .required)
             .field("lastName", .string, .required)
-            
+            .field("username", .string, .required)
+            .field("password", .string, .required)
             .create()
     }
     
