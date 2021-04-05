@@ -5,13 +5,12 @@
 //  Created by Josh Taraba on 2021-02-02.
 //
 
-import Foundation
 import Fluent
 
 
 struct CreatePatient: Migration{
     func prepare(on database: Database) -> EventLoopFuture<Void> {
-        database.schema("patients")
+        database.schema(Patient.schema)
             .id()
             .field("patientID", .int, .required)
             .field("firstName", .string, .required)
@@ -19,7 +18,9 @@ struct CreatePatient: Migration{
             
             .create()
     }
+    
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        database.schema("patients").delete()
+        database.schema(Patient.schema)
+            .delete()
     }
 }
