@@ -4,6 +4,7 @@ import Fluent
 
 struct TodoController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
+        //routes.grouped("screening")
         routes.get(use: indexHandler)
         routes.post(use: indexPostHandler)
     }
@@ -35,5 +36,4 @@ struct TodoController: RouteCollection {
 
 struct ScreeningFormData: Content {
     let answer: Bool
-    let text: String
 }

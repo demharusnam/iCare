@@ -21,13 +21,9 @@
     Have you been outside the country in the last 14 days?<br><br>
     Have you been in contact with anyone thats tested positive for COVID-19<br><br>
     Have you tested positive for COVID-19 within the last 14 days?</p>
-<<<<<<< HEAD
+
 <form method="post">
     <label class = "radio-inline" for = "answer">
-=======
-<form>
-    <label class = "radio-inline" for = "yes1">
->>>>>>> 4dd9a71489a43f4f36d9822d83a921113ebffff8
         Yes
     <input type = "radio" name = "answer"  id = "answer" value="true"/>
     </label>
@@ -37,12 +33,7 @@
     </label>
     
     <br>
-    
-<<<<<<< HEAD
     <input class = "submit" type = "submit" value = "Submit"/>
-=======
-    <input class = "submit" type = "submit" id = "submit" value = "Submit">
->>>>>>> 4dd9a71489a43f4f36d9822d83a921113ebffff8
     
 </form>
 </div>
