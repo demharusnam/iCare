@@ -19,9 +19,7 @@ struct CreateAdminUser: Migration {
         }
         
         let user = User(firstName: "Admin", lastName: "Admin", username: "admin", password: passwordHash, role: .admin)
-        
-        print(user.lastName)
-        
+
         return user.save(on: database)
     }
     
