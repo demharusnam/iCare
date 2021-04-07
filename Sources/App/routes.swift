@@ -10,6 +10,13 @@ func routes(_ app: Application) throws {
         return req.view.render("register")
     }
     
+    app.get("screening"){ req -> EventLoopFuture<View> in
+        return req.view.render("screening")
+    }
+    
     let usersController = UsersController()
     try app.register(collection: usersController)
+    
+    let screeningController = ScreeningController()
+    try app.register(collection: screeningController)
 }

@@ -42,7 +42,7 @@ struct UsersController: RouteCollection {
     
     func loginPostHandler(_ req: Request) -> EventLoopFuture<Response> {
         if req.auth.has(User.self) {
-            return req.eventLoop.future(req.redirect(to: "/"))
+            return req.eventLoop.future(req.redirect(to: "/screening"))
         } else {
             let context = LoginContext(loginError: true)
             
