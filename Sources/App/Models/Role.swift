@@ -17,11 +17,14 @@ enum Role: String {
     
     case employee
     
+    case admin
+    
     var clearance: Int {
         switch self {
         case .employee: return 1
         case .patient: return 3
         case .visitor: return 4
+        case .admin: return -1
         }
     }
 }

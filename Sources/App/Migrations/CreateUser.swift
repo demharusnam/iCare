@@ -7,28 +7,29 @@
 
 import Fluent
 
-struct CreateEmployee: Migration {
+struct CreateUser: Migration {
     func prepare(on database: Database) -> EventLoopFuture<Void> {
         database.enum(Role.schema)
             .case("employee")
             .case("patient")
             .case("visitor")
+            .case("admin")
             .create()
             .flatMap { role in
-                database.schema(Employee.schema)
+                database.schema(User.schema)
                     .id()
                     .field("firstName", .string, .required)
                     .field("lastName", .string, .required)
-                    .field("employeeID", .int, .required)
+                    .field("username", .string, .required)
                     .field("password", .string, .required)
                     .field("role", role, .required)
-                    .unique(on: "employeeID")
+                    .unique(on: "username")
                     .create()
             }
     }
     
     func revert(on database: Database) -> EventLoopFuture<Void> {
-        database.schema(Employee.schema)
+        database.schema(User.schema)
             .delete()
     }
 }

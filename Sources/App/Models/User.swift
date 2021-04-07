@@ -8,8 +8,8 @@
 import Fluent
 import Vapor
 
-final class Employee: Model, Content {
-    static let schema = "employees"
+final class User: Model, Content {
+    static let schema = "users"
 
     @ID(key: .id)
     var id: UUID?
@@ -31,13 +31,13 @@ final class Employee: Model, Content {
     
     init() {}
 
-    init(id: UUID? = nil, firstName: String, lastName: String, username: String, password: String) {
+    init(id: UUID? = nil, firstName: String, lastName: String, username: String, password: String, role: Role) {
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
         self.username = username
         self.password = password
-        self.role = .employee
+        self.role = role
     }
     
     final class Public: Content {
@@ -45,47 +45,53 @@ final class Employee: Model, Content {
         var firstName: String
         var lastName: String
         var username: String
+        var role: Role
         
-        init(id: UUID?, firstName: String, lastName: String, username: String) {
+        init(id: UUID?, firstName: String, lastName: String, username: String, role: Role) {
             self.id = id
             self.firstName = firstName
             self.lastName = lastName
             self.username = username
+            self.role = role
         }
     }
 }
 
-extension Employee {
-    func convertToPublic() -> Employee.Public {
-        return Employee.Public(id: id, firstName: firstName, lastName: lastName, username: username)
+extension User {
+    func convertToPublic() -> User.Public {
+        return User.Public(id: id, firstName: firstName, lastName: lastName, username: username, role: role)
     }
 }
 
-extension EventLoopFuture where Value: Employee {
-    func convertToPublic() -> EventLoopFuture<Employee.Public> {
-        return self.map { employee in
-            return employee.convertToPublic()
+extension EventLoopFuture where Value: User {
+    func convertToPublic() -> EventLoopFuture<User.Public> {
+        return self.map { user in
+            return user.convertToPublic()
         }
     }
 }
 
-extension Collection where Element: Employee {
-    func convertToPublic() -> [Employee.Public] {
+extension Collection where Element: User {
+    func convertToPublic() -> [User.Public] {
         return self.map { $0.convertToPublic() }
     }
 }
 
-extension EventLoopFuture where Value == Array<Employee> {
-    func convertToPublic() -> EventLoopFuture<[Employee.Public]> {
+extension EventLoopFuture where Value == Array<User> {
+    func convertToPublic() -> EventLoopFuture<[User.Public]> {
         return self.map { $0.convertToPublic() }
     }
 }
 
 extension User: ModelAuthenticatable {
-    static let usernameKey = \Employee.$username
-    static let passwordHashKey = \Employee.$password
+    static let usernameKey = \User.$username
+    static let passwordHashKey = \User.$password
     
     func verify(password: String) throws -> Bool {
         try Bcrypt.verify(password, created: self.password)
     }
 }
+
+extension User: ModelSessionAuthenticatable {}
+
+extension User: ModelCredentialsAuthenticatable {}
