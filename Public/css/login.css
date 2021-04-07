@@ -1,0 +1,38 @@
+.loginbox{
+    text-align: center;
+    width: 400px;
+    position: absolute;
+    top: 20%;
+    left: 63%;
+    padding: 50px;
+}
+
+.title{
+    color: #376D4B;
+}
+
+.loginbox label{
+    color: #376D4B;
+}
+
+.loginbutton{
+    color: #81CE9D;
+    border-radius: 25px;
+    background-color: #376D4B;
+    text-decoration: none;
+}
+
+.loginbutton:hover{
+    opactity: 60%;
+}
+
+.form-control{
+    width: 100px;
+}
+
+
+
+.leaves{
+    position:absolute;
+    top: -50%;
+}

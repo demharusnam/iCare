@@ -11,10 +11,10 @@ import Fluent
 struct UsersController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let authSessionsRoutes = routes.grouped(User.sessionAuthenticator())
-        authSessionsRoutes.get("login", use: loginHandler)
+        authSessionsRoutes.get(use: loginHandler)
         
         let credentialsAuthRoutes = authSessionsRoutes.grouped(User.credentialsAuthenticator())
-        credentialsAuthRoutes.post("login", use: loginPostHandler)
+        credentialsAuthRoutes.post(use: loginPostHandler)
         authSessionsRoutes.post("logout", use: logoutHandler)
         authSessionsRoutes.get("register", use: registerHandler)
         authSessionsRoutes.post("register", use: registerPostHandler)
