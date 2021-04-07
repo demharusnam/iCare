@@ -1,0 +1,43 @@
+.userinfo {
+    margin: 20px;
+    margin-top: 100px;
+    background-color: #81CE9D;
+    border-radius: 20px;
+    width: 55%;
+    box-shadow: 10px 10px 5px grey;
+}
+
+.header{
+    color: #376D4B;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+
+.lowertext {
+    font-size: 18px;
+    color: #376D4B;
+    padding: 10px;
+    text-align: center;
+
+}
+.items{
+    padding: 20px;
+}
+
+.list li{
+    list-style-type: none;
+    color:#376D4B;
+    padding: 20px;
+    font-size: 20px;
+}
+
+.leaves{
+    position: absolute;
+    top: -50%;
+    left: 65%;
+
+}
+
+/*light green : #81CE9D
+  dark green: #376D4B*/
+

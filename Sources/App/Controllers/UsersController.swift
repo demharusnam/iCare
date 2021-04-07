@@ -18,6 +18,8 @@ struct UsersController: RouteCollection {
         authSessionsRoutes.post("logout", use: logoutHandler)
         authSessionsRoutes.get("register", use: registerHandler)
         authSessionsRoutes.post("register", use: registerPostHandler)
+        
+        routes.get("profile", use: profileHandler)
     }
     
     func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
@@ -88,6 +90,27 @@ struct UsersController: RouteCollection {
             return req.redirect(to: "/")
         }
     }
+    
+    //PROFILE HANDLERS
+    func profileHandler(_ req: Request) throws -> EventLoopFuture<View> {
+       
+        /*let user = try req.auth.require(User.self)
+        let context = ProfileContext(
+            title: "Profile",
+            user: user
+        )*/
+        return req.view.render("profile")
+    
+        
+        /*
+         First Name Last Name:
+         Username:
+         Role:
+         
+         */
+    
+    }
+    
 }
 
 struct LoginContext: Encodable {
@@ -124,5 +147,22 @@ extension RegisterData: Validatable {
         validations.add("lastName", as: String.self, is: .ascii)
         validations.add("username", as: String.self, is: .alphanumeric && .count(3...))
         validations.add("password", as: String.self, is: .count(8...))
+    }
+}
+
+
+//profile
+struct ProfileContext: Encodable {
+    let title: String
+    let username: String
+    let firstName: String
+    let lastName: String
+    let role: Role
+    init(title: String, user: User){
+        self.title = title
+        self.username = user.username
+        self.firstName = user.firstName
+        self.lastName = user.lastName
+        self.role = user.role
     }
 }

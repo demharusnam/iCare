@@ -25,7 +25,7 @@ struct ScreeningController: RouteCollection {
             return req.redirect(to: "screening/fail")
         }
         
-        return req.redirect(to: "account")
+        return req.redirect(to: "profile")
     }
     
     
@@ -39,7 +39,7 @@ struct ScreeningController: RouteCollection {
         let res = try req.content.decode(FailScreeningData.self)
 
         if res.understand {
-            return req.redirect(to: "/account")
+            return req.redirect(to: "/profile")
         }
         
         return req.redirect(to: "/login")
