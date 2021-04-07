@@ -4,11 +4,13 @@
   <meta charset="utf-8">
 </head>
 <link rel = "stylesheet" href = "/css/login.css">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 <body>
     #extend("base"):
         #export("content"):
         <div class = "loginbox">
-        <h1 class = "title">#(title)</h1>
+        <h1 class = "title">login</h1>
         #if(loginError):
              <div class="alert alert-danger" role="alert">
                User authentication error. Either your username or
@@ -19,17 +21,15 @@
            <form method="post">
              <!-- 5 -->
              <div class="form-group">
-               <label for="username">Username</label>
-               <input type="text" name="username" class="form-control" id="username"/>
+               <input type="text" name="username" class="form-control" id="username" placeholder = "username"/>
              </div>
        <!-- 6 -->
              <div class="form-group">
-               <label for="password">Password</label>
-               <input type="password" name="password" class="form-control" id="password"/>
+               <input type="password" name="password" class="form-control" id="password" placeholder = "password"/>
              </div>
        <!-- 7 -->
-             <button  class = "loginbutton" type="submit">
-               Log In
+             <button class = "button" type="submit">
+               login
              </button>
            </form>
            </div>
