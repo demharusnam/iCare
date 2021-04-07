@@ -25,7 +25,7 @@ struct ScreeningController: RouteCollection {
             return req.redirect(to: "screening/fail")
         }
         
-        return req.redirect(to: "account")
+        return req.redirect(to: "/account")
     }
     
     

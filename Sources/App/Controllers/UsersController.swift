@@ -20,21 +20,14 @@ struct UsersController: RouteCollection {
         authSessionsRoutes.post("register", use: registerPostHandler)
     }
     
-    func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
-        let user = try req.content.decode(User.self)
-        
-        user.password = try Bcrypt.hash(user.password)
-        
-        return user.save(on: req.db).map { user.convertToPublic() }
-    }
-    
     func loginHandler(_ req: Request) -> EventLoopFuture<View> {
+        let userLoggedIn = req.auth.has(User.self)
         let context: LoginContext
         
         if let error = req.query[Bool.self, at: "error"], error {
-            context = LoginContext(loginError: true)
+            context = LoginContext(loginError: true, userLoggedIn: userLoggedIn)
         } else {
-            context = LoginContext()
+            context = LoginContext(userLoggedIn: userLoggedIn)
         }
         
         return req.view.render("login", context)
@@ -44,7 +37,7 @@ struct UsersController: RouteCollection {
         if req.auth.has(User.self) {
             return req.eventLoop.future(req.redirect(to: "/screening"))
         } else {
-            let context = LoginContext(loginError: true)
+            let context = LoginContext(loginError: true, userLoggedIn: false)
             
             return req.view.render("login", context)
                 .encodeResponse(for: req)
@@ -93,9 +86,11 @@ struct UsersController: RouteCollection {
 struct LoginContext: Encodable {
     let title = "Log In"
     let loginError: Bool
+    let userLoggedIn: Bool
     
-    init(loginError: Bool = false) {
+    init(loginError: Bool = false, userLoggedIn: Bool) {
         self.loginError = loginError
+        self.userLoggedIn = userLoggedIn
     }
 }
 
