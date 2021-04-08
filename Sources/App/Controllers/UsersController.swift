@@ -10,6 +10,11 @@ import Fluent
 
 struct UsersController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
+        let usersRoutes = routes.grouped("api", "users")
+        usersRoutes.get(use: getAllHandler)
+        usersRoutes.get(":userID", use: getHandler)
+        usersRoutes.get(":userID","appointments", use: getAppointmentsHandler)
+        
         let authSessionsRoutes = routes.grouped(User.sessionAuthenticator())
         authSessionsRoutes.get(use: loginHandler)
         
@@ -89,6 +94,24 @@ struct UsersController: RouteCollection {
             
             return req.redirect(to: "/")
         }
+    }
+    
+    //returning users with http requests
+    func getAllHandler(_ req: Request) -> EventLoopFuture<[User]> {
+        User.query(on: req.db).all()
+    }
+    
+    func getHandler(_ req: Request) -> EventLoopFuture<User> {
+        User.find(req.parameters.get("userID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+    }
+    
+    func getAppointmentsHandler(_ req: Request) -> EventLoopFuture<[Appointment]> {
+        User.find(req.parameters.get("userID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { user in
+                user.$appointments.get(on: req.db)
+            }
     }
     
     //PROFILE HANDLERS

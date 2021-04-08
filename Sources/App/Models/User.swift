@@ -26,6 +26,9 @@ final class User: Model, Content {
     @Field(key: "password")
     var password: String
     
+    @Children(for: \.$user)
+    var appointments: [Appointment]
+    
     @Enum(key: "role")
     var role: Role
     

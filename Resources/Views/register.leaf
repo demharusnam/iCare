@@ -6,7 +6,7 @@
 <link rel = "stylesheet" href = "/css/register.css"/>
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
-<body>
+<body scroll = "no" style = "overflow: hidden">
 #extend("base"):
     #export("content"):
     <div class = "registerbox">

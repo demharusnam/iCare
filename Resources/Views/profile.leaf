@@ -1,5 +1,5 @@
 <link rel = "stylesheet" href = "/css/profile.css">
-<body>
+<body scroll = "no" style = "overflow: hidden">
     #extend("index"):
         #export("content"):
             <div class = "userinfo">
