@@ -5,7 +5,7 @@
         #export("content"):
             <h1>#(appointment.name)</h1>
             <h2>#(appointment.description)</h2>
-            <h3>#(appointment.date)</h3>
+            <h3>#(date)</h3>
             <p> created by <a href = "/users/#(user.id)/"> #(user.firstName)</a></p>
         #endexport
    #endextend

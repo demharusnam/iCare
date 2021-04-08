@@ -26,6 +26,8 @@ final class Appointment: Model {
     @Parent(key: "userID")
     var user: User
     
+    var dateString: String = ""
+    
     init() {}
     
     init(id:UUID? = nil, name: String, description: String, date: Date, userID: User.IDValue){
@@ -34,7 +36,17 @@ final class Appointment: Model {
         self.description = description
         self.date = date
         self.$user.id = userID
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-mm-dd"
+        self.dateString = dateFormatter.string(from: date)
     }
+    
+    func dateToString() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-mm-dd"
+        return dateFormatter.string(from: self.date)
+    }
+    
 }
 
 extension Appointment: Content {}

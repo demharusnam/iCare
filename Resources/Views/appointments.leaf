@@ -4,9 +4,10 @@
     #extend("index"):
         #export("content"):
             <head> #(user.firstName) #(title) </head>
+            <a href = "/appointments/new"><input class = "btn btn-primary" type = "submit" value = "+"/></a>
             #if(appointments):
                 #for(appointment in appointments):
-                    <p><a href = "/appointments/#(appointment.id)">#(appointment.name) #(appointment.date)</a></p>
+                    <p><a href = "/appointments/#(appointment.id)">#(appointment.name) #(appointment.dateString)</a></p>
                     
                 #endfor
             #else:
