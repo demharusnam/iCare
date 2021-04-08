@@ -12,7 +12,7 @@ struct AppointmentController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let appointmentApiRoutes = routes.grouped("api","appointments")
         appointmentApiRoutes.get(use: getAllHandler)
-        appointmentApiRoutes.post(use: createAppointmentHandler)
+        //appointmentApiRoutes.post(use: createAppointmentHandler)
         appointmentApiRoutes.get(":appointmentID", use: getAppointmentHandler)
         appointmentApiRoutes.delete(":appointmentID", use: deleteAppointmentHandler)
         appointmentApiRoutes.get(":appointmentID", "user", use: getUserHandler)
@@ -21,15 +21,18 @@ struct AppointmentController: RouteCollection {
         let appointmentRoutes = routes.grouped("appointments")
         appointmentRoutes.get(use: indexHandler)
         appointmentRoutes.get(":appointmentID",use: appointmentHandler) //specific appointments per user will need to add a different endpoint
+        appointmentRoutes.get("new", use: createAppointmentHandler)
+        appointmentRoutes.post("new", use: createAppointmentPostHandler)
         
         routes.get("users", ":userID", use: userHandler)
     }
     
+    //MARK: THESE ARE ALL BACK END API TEST CALLS
     func getAllHandler(_ req: Request) -> EventLoopFuture<[Appointment]> {
       Appointment.query(on: req.db).all()
     }
     
-    func createAppointmentHandler(_ req: Request) throws -> EventLoopFuture<Appointment> {
+    /*func createAppointmentHandler(_ req: Request) throws -> EventLoopFuture<Appointment> {
         let data = try req.content.decode(CreateAppointmentData.self)
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-mm-dd"
@@ -40,7 +43,7 @@ struct AppointmentController: RouteCollection {
             date: date!,
             userID: data.userID)
         return appointment.save(on: req.db).map {appointment}
-    }
+    }*/
     
     func getAppointmentHandler(_ req: Request) -> EventLoopFuture<Appointment> {
         Appointment.find(req.parameters.get("appointmentID"), on: req.db)
@@ -65,7 +68,7 @@ struct AppointmentController: RouteCollection {
     }
     
     
-//MARK: WE NEED TO QUERY ON THE THE APPOINTMENTS TABLE WITH THE CURRENT USER ID: THE LOGGED IN USERS ID
+//MARK: THESE ARE DISPLAYED ON THE FRONT END (WE NEED TO QUERY ON THE THE APPOINTMENTS TABLE WITH THE CURRENT USER ID: THE LOGGED IN USERS ID)
 //    idk how to do that need help with that
     func indexHandler(_ req: Request) -> EventLoopFuture<View> {
         Appointment.query(on: req.db).all().flatMap { appointments in
@@ -100,6 +103,33 @@ struct AppointmentController: RouteCollection {
                 }
             }
     }
+    
+    //MARK: CREATE APPOINTMENT BUTTONS AND HANDLERS
+    func createAppointmentHandler(_ req: Request) -> EventLoopFuture<View> {
+        User.query(on: req.db).all().flatMap { users in
+            let context = CreateAppointmentContext(users: users)
+            return req.view.render("newAppointment", context)
+        }
+    }
+    
+    func createAppointmentPostHandler(_ req: Request) throws -> EventLoopFuture<Response> {
+        let data = try req.content.decode(CreateAppointmentData.self)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-mm-dd"
+        let date = dateFormatter.date(from: data.date)
+        let appointment = Appointment(
+            name: data.name,
+            description: data.description,
+            date: date!,
+            userID: data.userID)
+        return appointment.save(on: req.db).flatMapThrowing {
+            guard let id = appointment.id else {
+                throw Abort(.internalServerError)
+            }
+            return req.redirect(to: "/appointments/\(id)")
+        }
+    }
+    
 }
 
 //MARK: STRUCTS
@@ -128,6 +158,10 @@ struct UserContext: Encodable {
     let appointments: [Appointment]
 }
 
+struct CreateAppointmentContext: Encodable{
+    let title = "New Appointment"
+    let users: [User]
+}
 
 //MARK: QUERIES
 //Table.query(on: req.db).all() equivalent to SELECT * FROM TABLE
