@@ -1,0 +1,31 @@
+<link rel = "stylesheet" href = "/css/profile.css">
+<body scroll = "no" style = "overflow: hidden">
+    #extend("index"):
+        #export("content"):
+            <div class = "userinfo">
+                <h1 class = "header"> Welcome, Josh#(firstName) <h2>
+                <p class = "lowertext"> Here is all of the information you have shared with the hospital. </p>
+                <div class = "items">
+                    <ul class = "list">
+                        <li class = "name">
+                            Name: Josh Taraba#(firstName) #(lastName)
+                        </li>
+                        <li class = "username">
+                            Username: josht#(username)
+                        </li>
+                        <li class = "role">
+                            Role: Developer#(role)
+                        </li>
+                    </ul>
+                </div
+           </div>
+           <div class = "leaves">
+               <img src = "/images/leaves.png">
+            </div>
+         #endexport
+   #endextend
+   
+   
+</body>
+</html>
+

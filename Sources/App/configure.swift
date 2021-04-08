@@ -32,9 +32,11 @@ public func configure(_ app: Application) throws {
     ), as: .psql)
     
     app.migrations.add(CreateUser())
+    app.migrations.add(CreateAppointment())
     app.migrations.add(CreateVisitor())
     app.migrations.add(CreateToken())
     app.migrations.add(CreateAdminUser())
+    
     
     app.logger.logLevel = .debug
     

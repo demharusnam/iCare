@@ -14,18 +14,18 @@
 
 .title{
     color: #376D4B;
+    font-family: 'Dancing Script', cursive;
 }
 
-.registerbutton{
+.button{
     color: #81CE9D;
     border-radius: 25px;
     background-color: #376D4B;
     text-decoration: none;
+    border: none;
+
 }
 
-.registerbutton:hover{
-    opactity: 60%;
-}
 
 .registerbox label{
     color: #376D4B;

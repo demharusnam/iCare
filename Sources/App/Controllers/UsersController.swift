@@ -10,6 +10,11 @@ import Fluent
 
 struct UsersController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
+        let usersRoutes = routes.grouped("api", "users")
+        usersRoutes.get(use: getAllHandler)
+        usersRoutes.get(":userID", use: getHandler)
+        usersRoutes.get(":userID","appointments", use: getAppointmentsHandler)
+        
         let authSessionsRoutes = routes.grouped(User.sessionAuthenticator())
         authSessionsRoutes.get(use: loginHandler)
         
@@ -18,6 +23,8 @@ struct UsersController: RouteCollection {
         authSessionsRoutes.post("logout", use: logoutHandler)
         authSessionsRoutes.get("register", use: registerHandler)
         authSessionsRoutes.post("register", use: registerPostHandler)
+        
+        routes.get("profile", use: profileHandler)
     }
     
     func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
@@ -42,7 +49,7 @@ struct UsersController: RouteCollection {
     
     func loginPostHandler(_ req: Request) -> EventLoopFuture<Response> {
         if req.auth.has(User.self) {
-            return req.eventLoop.future(req.redirect(to: "/"))
+            return req.eventLoop.future(req.redirect(to: "/screening"))
         } else {
             let context = LoginContext(loginError: true)
             
@@ -88,6 +95,45 @@ struct UsersController: RouteCollection {
             return req.redirect(to: "/")
         }
     }
+    
+    //returning users with http requests
+    func getAllHandler(_ req: Request) -> EventLoopFuture<[User]> {
+        User.query(on: req.db).all()
+    }
+    
+    func getHandler(_ req: Request) -> EventLoopFuture<User> {
+        User.find(req.parameters.get("userID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+    }
+    
+    func getAppointmentsHandler(_ req: Request) -> EventLoopFuture<[Appointment]> {
+        User.find(req.parameters.get("userID"), on: req.db)
+            .unwrap(or: Abort(.notFound))
+            .flatMap { user in
+                user.$appointments.get(on: req.db)
+            }
+    }
+    
+    //MARK: PROFILES HANDLERS
+    func profileHandler(_ req: Request) throws -> EventLoopFuture<View> {
+       
+        /*let user = try req.auth.require(User.self)
+        let context = ProfileContext(
+            title: "Profile",
+            user: user
+        )*/
+        return req.view.render("profile")
+    
+        
+        /*
+         First Name Last Name:
+         Username:
+         Role:
+         
+         */
+    
+    }
+    
 }
 
 struct LoginContext: Encodable {
@@ -124,5 +170,22 @@ extension RegisterData: Validatable {
         validations.add("lastName", as: String.self, is: .ascii)
         validations.add("username", as: String.self, is: .alphanumeric && .count(3...))
         validations.add("password", as: String.self, is: .count(8...))
+    }
+}
+
+
+//profile
+struct ProfileContext: Encodable {
+    let title: String
+    let username: String
+    let firstName: String
+    let lastName: String
+    let role: Role
+    init(title: String, user: User){
+        self.title = title
+        self.username = user.username
+        self.firstName = user.firstName
+        self.lastName = user.lastName
+        self.role = user.role
     }
 }
