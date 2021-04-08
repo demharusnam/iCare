@@ -114,7 +114,7 @@ struct UsersController: RouteCollection {
             }
     }
     
-    //PROFILE HANDLERS
+    //MARK: PROFILES HANDLERS
     func profileHandler(_ req: Request) throws -> EventLoopFuture<View> {
        
         /*let user = try req.auth.require(User.self)

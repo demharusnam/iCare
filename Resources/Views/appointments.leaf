@@ -1,0 +1,21 @@
+<link rel = "stylesheet" href = "/css/appointments.css">
+<title>#(title)</title>
+<body scroll = "no" style = "overflow: hidden">
+    #extend("index"):
+        #export("content"):
+            <head> #(user.firstName) #(title) </head>
+            #if(appointments):
+                #for(appointment in appointments):
+                    <p><a href = "/appointments/#(appointment.id)">#(appointment.name) #(appointment.date)</a></p>
+                    
+                #endfor
+            #else:
+                <h2>No scheduled appointments</h2>
+            #endif
+         #endexport
+   #endextend
+   
+   
+</body>
+</html>
+

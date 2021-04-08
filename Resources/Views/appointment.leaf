@@ -1,0 +1,17 @@
+<link rel = "stylesheet" href = "/css/appointments.css">
+<title>#(title)</title>
+<body scroll = "no" style = "overflow: hidden">
+    #extend("index"):
+        #export("content"):
+            <h1>#(appointment.name)</h1>
+            <h2>#(appointment.description)</h2>
+            <h3>#(appointment.date)</h3>
+            <p> created by <a href = "/users/#(user.id)/"> #(user.firstName)</a></p>
+        #endexport
+   #endextend
+   
+   
+</body>
+</html>
+
+
