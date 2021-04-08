@@ -17,14 +17,23 @@ struct UsersController: RouteCollection {
         
         let authSessionsRoutes = routes.grouped(User.sessionAuthenticator())
         authSessionsRoutes.get(use: loginHandler)
-        
-        let credentialsAuthRoutes = authSessionsRoutes.grouped(User.credentialsAuthenticator())
-        credentialsAuthRoutes.post(use: loginPostHandler)
         authSessionsRoutes.post("logout", use: logoutHandler)
         authSessionsRoutes.get("register", use: registerHandler)
         authSessionsRoutes.post("register", use: registerPostHandler)
         
-        routes.get("profile", use: profileHandler)
+        let credentialsAuthRoutes = authSessionsRoutes.grouped(User.credentialsAuthenticator())
+        credentialsAuthRoutes.post(use: loginPostHandler)
+        
+        let protectedRoutes = authSessionsRoutes.grouped(User.redirectMiddleware(path: "/"))
+        protectedRoutes.get("profile", use: profileHandler)
+        
+        // register protected controllers (ANYTHING THAT REQUIRES USER DATA)
+        let screeningController = ScreeningController()
+        try protectedRoutes.register(collection: screeningController)
+        
+        let appointmentController = AppointmentController()
+        try protectedRoutes.register(collection: appointmentController)
+        
     }
     
     func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
@@ -37,7 +46,6 @@ struct UsersController: RouteCollection {
     
     func loginHandler(_ req: Request) -> EventLoopFuture<View> {
         let context: LoginContext
-        
         if let error = req.query[Bool.self, at: "error"], error {
             context = LoginContext(loginError: true)
         } else {
@@ -117,12 +125,12 @@ struct UsersController: RouteCollection {
     //MARK: PROFILES HANDLERS
     func profileHandler(_ req: Request) throws -> EventLoopFuture<View> {
        
-        /*let user = try req.auth.require(User.self)
+        let user = try req.auth.require(User.self)
         let context = ProfileContext(
             title: "Profile",
             user: user
-        )*/
-        return req.view.render("profile")
+        )
+        return req.view.render("profile", context)
     
         
         /*
