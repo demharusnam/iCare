@@ -73,8 +73,8 @@ struct UsersController: RouteCollection {
     func registerHandler(_ req: Request) -> EventLoopFuture<View> {
         let context: RegisterContext
         
-        if let message = req.query[String.self, at: "message"] {
-            context = RegisterContext(message: message)
+        if let error = req.query[Bool.self, at: "error"], error, let message = req.query[String.self, at: "message"] {
+            context = RegisterContext(message: message, registrationError: true)
         } else {
             context = RegisterContext()
         }
@@ -86,10 +86,10 @@ struct UsersController: RouteCollection {
         do {
             try RegisterData.validate(content: req)
         } catch let error as ValidationsError {
-            let message = error.description.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "Unknown error"
-            let redirect = req.redirect(to: "/register?message=\(message)")
+            let message = error.description
+            let context = RegisterContext(message: message, registrationError: true)
             
-            return req.eventLoop.future(redirect)
+            return req.view.render("register", context).encodeResponse(for: req)
         }
         
         let data = try req.content.decode(RegisterData.self)
@@ -99,7 +99,7 @@ struct UsersController: RouteCollection {
         return user.save(on: req.db).map {
             req.auth.login(user)
             
-            return req.redirect(to: "/")
+            return req.redirect(to: "/screening")
         }
     }
     
@@ -154,10 +154,12 @@ struct LoginContext: Encodable {
 
 struct RegisterContext: Encodable {
     let title = "Register"
-    let message: String?
+    let message: String
+    let registrationError: Bool
     
-    init(message: String? = nil) {
+    init(message: String = "", registrationError: Bool = false) {
         self.message = message
+        self.registrationError = registrationError
     }
 }
 
