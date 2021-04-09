@@ -17,13 +17,38 @@
     #export("content"):
     <div class = "timeContainer">
         <h1 class = "title"> Visitation Times for Josh#(user.firstName)</h1>
-        <ul class = "times">
-            <li class = "monday"> Mondays: 9:00 - 16:00 </li>
-            <li class = "tuesday"> Tuesday: 12:00 - 18:00 </li>
-            <li class = "wednesday"> Wednesdays: 9:00 - 15:00 </li>
-            <li class = "thursday"> Thursdays: 10:00 - 13:00 </li>
-            <li class = "friday"> Fridays: 9:00 - 16:00 </li>
-        </ul>
+            <div class = "cards">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Mondays</h5>
+                <h6 class="card-subtitle mb-2 text-muted">9:00 - 16:00</h6>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Tuesdays</h5>
+                <h6 class="card-subtitle mb-2 text-muted">9:00 - 16:00</h6>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Wednesdays</h5>
+                <h6 class="card-subtitle mb-2 text-muted">9:00 - 16:00</h6>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Thursdays</h5>
+                <h6 class="card-subtitle mb-2 text-muted">9:00 - 16:00</h6>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Fridays</h5>
+                <h6 class="card-subtitle mb-2 text-muted">9:00 - 16:00</h6>
+              </div>
+            </div>
+            </div>
     </div>
     #endexport
     #endextend
