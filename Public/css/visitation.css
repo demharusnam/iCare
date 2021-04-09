@@ -1,0 +1,22 @@
+.visitorForm {
+    position: absolute;
+    text-align: center;
+    left: 15%;
+}
+
+.title{
+    padding-top: 60px;
+    margin: 30px;
+    color: #376D4B;
+    text-align: center;
+}
+
+.form-group {
+    padding: 20px;
+}
+
+.pic {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+}
