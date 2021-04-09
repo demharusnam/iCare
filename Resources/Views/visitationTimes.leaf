@@ -16,8 +16,14 @@
     #extend("base"):
     #export("content"):
     <div class = "timeContainer">
-        <h1> Visitation Times for #(user.firstName)</h1>
-        <p class = "times"> 9:00 - 16:00 </p>
+        <h1 class = "title"> Visitation Times for Josh#(user.firstName)</h1>
+        <ul class = "times">
+            <li class = "monday"> Mondays: 9:00 - 16:00 </li>
+            <li class = "tuesday"> Tuesday: 12:00 - 18:00 </li>
+            <li class = "wednesday"> Wednesdays: 9:00 - 15:00 </li>
+            <li class = "thursday"> Thursdays: 10:00 - 13:00 </li>
+            <li class = "friday"> Fridays: 9:00 - 16:00 </li>
+        </ul>
     </div>
     #endexport
     #endextend

@@ -1,3 +1,21 @@
 .timeContainer{
     margin: auto;
+    margin-top: 100px;
+
+}
+
+.title {
+    color:#376D4B;
+    text-align: center;
+}
+
+.times {
+    color:#376D4B;
+    text-align: center;
+    padding: 25px;
+}
+
+li{
+    padding: 20px;
+    list-style: none;
 }

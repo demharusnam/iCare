@@ -1,7 +1,6 @@
-
 .navbar-nav li{
     padding-right: 50px;
-    margin-right: 20px;
+    margin-right: 50px;
 }
 
 .navbar-nav li:hover{
@@ -17,3 +16,5 @@
     color: #376D4B;
     font-size: 28px;
 }
+
+
