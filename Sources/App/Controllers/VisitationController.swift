@@ -12,15 +12,17 @@ struct VisitationController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let visitorRoutes = routes.grouped("visitor")
         visitorRoutes.get("register", use: getVisitationHandler)
+        visitorRoutes.post("register",use: createVisitorPostHandler)
+        
         visitorRoutes.get("screening", use: screenHandler)
         visitorRoutes.post("screening", use: screenPostHandler)
+        
         visitorRoutes.get("visitor","screening","fail", use: failScreenHandler)
         visitorRoutes.post("visitor","screening","fail", use: failScreenPostHandler)
+
+        visitorRoutes.get("visitation-times", use: getVisitationTimesHandler)
     }
     
-    func getVisitationHandler(_ req: Request) -> EventLoopFuture<View> {
-        return req.view.render("visitation")
-    }
     
     func screenHandler(_ req: Request) -> EventLoopFuture<View> {
         return req.view.render("visitorScreening")
@@ -54,6 +56,26 @@ struct VisitationController: RouteCollection {
         
         return req.redirect(to: "/")
     }
+    
+    //MARK: - Create Visitor
+    func getVisitationHandler(_ req: Request) -> EventLoopFuture<View> {
+        return req.view.render("visitation")
+    }
+    
+    func createVisitorPostHandler(_ req: Request) throws -> EventLoopFuture<Response>{
+        let data = try req.content.decode(CreateVisitorData.self)
+        let user = data.username
+        let visitor = Visitor(
+            firstName: data.firstName,
+            lastName: data.lastName)
+        
+        return visitor.save(on: req.db).transform(to: req.redirect(to: "/visitor/visitation-times"))
+    }
+    
+    func getVisitationTimesHandler(_ req: Request) -> EventLoopFuture<View> {
+        return req.view.render("visitationTimes")
+    }
+    
 }
 
 // MARK: - Screening structure
@@ -68,3 +90,10 @@ struct VisitorFailScreeningData: Content {
     let understand: Bool
 }
 
+//MARK: - Visitor Structs
+
+struct CreateVisitorData: Content {
+    let firstName : String
+    let lastName : String
+    let username : User
+}
