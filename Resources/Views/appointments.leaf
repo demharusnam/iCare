@@ -7,7 +7,7 @@
             <a href = "/appointments/new"><input class = "btn btn-primary" type = "submit" value = "+"/></a>
             #if(appointments):
                 #for(appointment in appointments):
-                    <p><a href = "/appointments/#(appointment.id)">#(appointment.name) #(appointment.dateString)</a></p>
+                    <p><a href = "/appointments/#(appointment.id)">#(appointment.name) | #(appointment.date)</a></p>
                     
                 #endfor
             #else:

@@ -10,40 +10,12 @@ import Fluent
 
 struct AppointmentController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        let appointmentApiRoutes = routes.grouped("api","appointments")
-        appointmentApiRoutes.get(use: getAllHandler)
-        //appointmentApiRoutes.post(use: createAppointmentHandler)
-        appointmentApiRoutes.get(":appointmentID", use: getAppointmentHandler)
-        appointmentApiRoutes.delete(":appointmentID", use: deleteAppointmentHandler)
-        appointmentApiRoutes.get(":appointmentID", "user", use: getUserHandler)
-
-        
         let appointmentRoutes = routes.grouped("appointments")
         appointmentRoutes.get(use: indexHandler)
         appointmentRoutes.get(":appointmentID",use: appointmentHandler) //specific appointments per user will need to add a different endpoint
         appointmentRoutes.get("new", use: createAppointmentHandler)
         appointmentRoutes.post("new", use: createAppointmentPostHandler)
-        
-        routes.get("users", ":userID", use: userHandler)
     }
-    
-    //MARK: THESE ARE ALL BACK END API TEST CALLS
-    func getAllHandler(_ req: Request) -> EventLoopFuture<[Appointment]> {
-      Appointment.query(on: req.db).all()
-    }
-    
-    /*func createAppointmentHandler(_ req: Request) throws -> EventLoopFuture<Appointment> {
-        let data = try req.content.decode(CreateAppointmentData.self)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-mm-dd"
-        let date = dateFormatter.date(from: data.date)
-        let appointment = Appointment(
-            name: data.name,
-            description: data.description,
-            date: date!,
-            userID: data.userID)
-        return appointment.save(on: req.db).map {appointment}
-    }*/
     
     func getAppointmentHandler(_ req: Request) -> EventLoopFuture<Appointment> {
         Appointment.find(req.parameters.get("appointmentID"), on: req.db)
@@ -59,26 +31,13 @@ struct AppointmentController: RouteCollection {
             }
     }
     
-    func getUserHandler(_ req: Request) -> EventLoopFuture<User> {
-        Appointment.find(req.parameters.get("appointmentID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap { appointment in
-                appointment.$user.get(on: req.db)
-            }
-    }
-    
-    
-//MARK: THESE ARE DISPLAYED ON THE FRONT END (WE NEED TO QUERY ON THE THE APPOINTMENTS TABLE WITH THE CURRENT USER ID: THE LOGGED IN USERS ID)
-//    idk how to do that need help with that
     func indexHandler(_ req: Request) -> EventLoopFuture<View> {
         Appointment.query(on: req.db).all().flatMap { appointments in
-            let appointmentData = appointments.isEmpty ? nil : appointments
             let context = IndexContext(
                 title: "Appointments",
-                appointments: appointmentData)
+                appointments: appointments)
             return req.view.render("appointments", context)
         }
-        
     }
     
     func appointmentHandler(_ req: Request) -> EventLoopFuture<View> {
@@ -93,56 +52,39 @@ struct AppointmentController: RouteCollection {
             }
     }
     
-    func userHandler(_ req: Request) -> EventLoopFuture<View> {
-        User.find(req.parameters.get("userID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-            .flatMap { user in
-                user.$appointments.get(on: req.db).flatMap { appointments in
-                    let context = UserContext(title: user.firstName, user: user, appointments: appointments)
-                    return req.view.render("user", context)
-                }
-            }
-    }
-    
-    //MARK: CREATE APPOINTMENT BUTTONS AND HANDLERS
+    // MARK: - CREATE APPOINTMENT BUTTONS AND HANDLERS
     func createAppointmentHandler(_ req: Request) -> EventLoopFuture<View> {
-        User.query(on: req.db).all().flatMap { users in
-            let context = CreateAppointmentContext(users: users)
-            return req.view.render("newAppointment", context)
-        }
+        return req.view.render("newAppointment")
     }
     
     func createAppointmentPostHandler(_ req: Request) throws -> EventLoopFuture<Response> {
         let data = try req.content.decode(CreateAppointmentData.self)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-mm-dd"
-        let date = dateFormatter.date(from: data.date)
+        let date = "\(data.date) at \(data.time)"
+        
+        let user = try req.auth.require(User.self)
+        let userID = try user.requireID()
         let appointment = Appointment(
             name: data.name,
             description: data.description,
-            date: date!,
-            userID: data.userID)
-        return appointment.save(on: req.db).flatMapThrowing {
-            guard let id = appointment.id else {
-                throw Abort(.internalServerError)
-            }
-            return req.redirect(to: "/appointments/\(id)")
-        }
+            date: date,
+            userID: userID)
+        
+        return appointment.save(on: req.db).transform(to: req.redirect(to: "/appointments"))
     }
     
 }
 
-//MARK: STRUCTS
+// MARK: - STRUCTS
 struct CreateAppointmentData: Content {
     let name: String
     let description: String
     let date: String
-    let userID: UUID
+    let time: String
 }
 
 struct IndexContext: Encodable {
     let title: String
-    let appointments: [Appointment]?
+    let appointments: [Appointment]
 }
 
 struct AppointmentContext: Encodable {
@@ -157,7 +99,7 @@ struct UserContext: Encodable {
     let appointments: [Appointment]
 }
 
-struct CreateAppointmentContext: Encodable{
+struct CreateAppointmentContext: Encodable {
     let title = "New Appointment"
     let users: [User]
 }

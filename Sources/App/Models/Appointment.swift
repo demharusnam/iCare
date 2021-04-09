@@ -8,7 +8,7 @@
 import Vapor
 import Fluent
 
-final class Appointment: Model {
+final class Appointment: Model, Encodable {
     static let schema = "appointments"
     
     @ID
@@ -21,32 +21,20 @@ final class Appointment: Model {
     var description: String
     
     @Field(key: "date")
-    var date: Date
+    var date: String
     
     @Parent(key: "userID")
     var user: User
     
-    var dateString: String = ""
+    init() { }
     
-    init() {}
-    
-    init(id:UUID? = nil, name: String, description: String, date: Date, userID: User.IDValue){
+    init(id:UUID? = nil, name: String, description: String, date: String, userID: User.IDValue){
         self.id = id
         self.name = name
         self.description = description
         self.date = date
         self.$user.id = userID
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-mm-dd"
-        self.dateString = dateFormatter.string(from: date)
     }
-    
-    func dateToString() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-mm-dd"
-        return dateFormatter.string(from: self.date)
-    }
-    
 }
 
 extension Appointment: Content {}

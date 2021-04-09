@@ -33,7 +33,6 @@ struct UsersController: RouteCollection {
         
         let appointmentController = AppointmentController()
         try protectedRoutes.register(collection: appointmentController)
-        
     }
     
     func createHandler(_ req: Request) throws -> EventLoopFuture<User.Public> {
