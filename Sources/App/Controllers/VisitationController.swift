@@ -17,10 +17,14 @@ struct VisitationController: RouteCollection {
         visitorRoutes.get("screening", use: screenHandler)
         visitorRoutes.post("screening", use: screenPostHandler)
         
-        visitorRoutes.get("visitor","screening","fail", use: failScreenHandler)
-        visitorRoutes.post("visitor","screening","fail", use: failScreenPostHandler)
+        visitorRoutes.get("screening","fail", use: failScreenHandler)
+        visitorRoutes.post("screening","fail", use: failScreenPostHandler)
 
         visitorRoutes.get("visitation-times", use: getVisitationTimesHandler)
+    }
+    
+    func indexHandler(_ req: Request) -> Response {
+        return req.redirect(to: "screening")
     }
     
     
@@ -34,7 +38,7 @@ struct VisitationController: RouteCollection {
         
         if data.visitorAnswer {
             // if answer yes to something
-            return req.redirect(to: "visitor/screening/fail")
+            return req.redirect(to: "screening/fail")
         }
         
         return req.redirect(to: "register")
@@ -59,18 +63,35 @@ struct VisitationController: RouteCollection {
     
     //MARK: - Create Visitor
     func getVisitationHandler(_ req: Request) -> EventLoopFuture<View> {
-        return req.view.render("visitation")
+        let context: CreateVisitorContext
+        
+        if let error = req.query[Bool.self, at: "error"], error {
+            context = CreateVisitorContext(error: true)
+        } else {
+            context = CreateVisitorContext()
+        }
+        
+        return req.view.render("visitation", context)
     }
     
     func createVisitorPostHandler(_ req: Request) throws -> EventLoopFuture<Response>{
         let data = try req.content.decode(CreateVisitorData.self)
-        let user = data.username
-        let visitor = Visitor(
-            firstName: data.firstName,
-            lastName: data.lastName)
         
-        
-        return visitor.save(on: req.db).transform(to: req.redirect(to: "/visitor/visitation-times"))
+        return User.query(on: req.db).all().flatMap { users in
+            let foundPatient = users.first(where: { $0.username == data.username && $0.role == .patient })
+            
+            if let _ = foundPatient {
+                let visitor = Visitor(
+                    firstName: data.firstName,
+                    lastName: data.lastName
+                )
+                
+                return visitor.save(on: req.db).transform(to: req.redirect(to: "/visitor/visitation-times"))
+            }
+            
+            let context = CreateVisitorContext(error: true)
+            return req.view.render("visitation", context).encodeResponse(for: req)
+        }
     }
     
     func getVisitationTimesHandler(_ req: Request) -> EventLoopFuture<View> {
@@ -93,8 +114,17 @@ struct VisitorFailScreeningData: Content {
 
 //MARK: - Visitor Structs
 
+struct CreateVisitorContext: Encodable {
+    let error: Bool
+    
+    init(error: Bool = false) {
+        self.error = error
+    }
+}
+
 struct CreateVisitorData: Content {
-    let firstName : String
-    let lastName : String
-    let username : User
+    let firstName: String
+    let lastName: String
+    let username: String
+    let message: String
 }
