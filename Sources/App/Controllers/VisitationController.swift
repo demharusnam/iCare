@@ -69,6 +69,7 @@ struct VisitationController: RouteCollection {
             firstName: data.firstName,
             lastName: data.lastName)
         
+        
         return visitor.save(on: req.db).transform(to: req.redirect(to: "/visitor/visitation-times"))
     }
     
