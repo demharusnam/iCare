@@ -58,9 +58,7 @@
         </div>
         
         <button  class = "button" type="submit">
-            <a class = "link" href = "/">
                 Register
-            </a>
         </button>
     </form>
     </div>
