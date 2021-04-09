@@ -24,13 +24,13 @@
     Have you been in contact with anyone thats tested positive for COVID-19?</p>
 
 <form method="post">
-    <label class = "radio-inline" for = "answer">
+    <label class = "radio-inline" for = "visitorAnswer">
         Yes
-    <input type = "radio" name = "answer"  id = "answer" value="true"/>
+    <input type = "radio" name = "visitorAnswer"  id = "visitorAnswer" value="true"/>
     </label>
-    <label class = "radio-inline" for = "answer">
+    <label class = "radio-inline" for = "visitorAnswer">
         No
-    <input type = "radio" name = "answer" id = "answer" value="false" />
+    <input type = "radio" name = "visitorAnswer" id = "visitorAnswer" value="false" />
     </label>
     
     <br>
