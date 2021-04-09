@@ -8,9 +8,11 @@
             <h3>#(date)</h3>
             <p> With #if(user.role == "employee"): Dr. #else: Patient #endif #(user.firstName) #(user.lastName)</p>
             
-            <button type="submit" class="btn btn-primary">
+            <form method="post">
+            <button type="submit" "class="btn btn-danger">
               Delete
             </button>
+            </form>
         #endexport
    #endextend
    

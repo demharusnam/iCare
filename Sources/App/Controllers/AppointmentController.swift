@@ -13,16 +13,17 @@ struct AppointmentController: RouteCollection {
         let appointmentRoutes = routes.grouped("appointments")
         appointmentRoutes.get(use: indexHandler)
         appointmentRoutes.get(":appointmentID", use: appointmentHandler) //specific appointments per user will need to add a different endpoint
+        appointmentRoutes.post(":appointmentID", use: deleteAppointmentHandler)
         appointmentRoutes.get("new", use: createAppointmentHandler)
         appointmentRoutes.post("new", use: createAppointmentPostHandler)
     }
     
-    func deleteAppointmentHandler(_ req: Request) -> EventLoopFuture<HTTPStatus> {
+    func deleteAppointmentHandler(_ req: Request) -> EventLoopFuture<Response> {
         Appointment.find(req.parameters.get("appointmentID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { appointment in
                 appointment.delete(on: req.db)
-                    .transform(to: .noContent)
+                    .transform(to: req.redirect(to: "/appointments"))
             }
     }
     
