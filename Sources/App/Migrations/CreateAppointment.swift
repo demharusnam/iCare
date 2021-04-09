@@ -16,6 +16,7 @@ struct CreateAppointment: Migration {
             .field("description", .string, .required)
             .field("date", .string, .required)
             .field("userID", .uuid, .required, .references("users", "id"))
+            .field("userID2", .uuid, .required, .references("users", "id"))
             .create()
     }
     

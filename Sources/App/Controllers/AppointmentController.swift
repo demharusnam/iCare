@@ -12,30 +12,27 @@ struct AppointmentController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let appointmentRoutes = routes.grouped("appointments")
         appointmentRoutes.get(use: indexHandler)
-        appointmentRoutes.get(":appointmentID",use: appointmentHandler) //specific appointments per user will need to add a different endpoint
+        appointmentRoutes.get(":appointmentID", use: appointmentHandler) //specific appointments per user will need to add a different endpoint
+        appointmentRoutes.post(":appointmentID", use: deleteAppointmentHandler)
         appointmentRoutes.get("new", use: createAppointmentHandler)
         appointmentRoutes.post("new", use: createAppointmentPostHandler)
     }
     
-    func getAppointmentHandler(_ req: Request) -> EventLoopFuture<Appointment> {
-        Appointment.find(req.parameters.get("appointmentID"), on: req.db)
-            .unwrap(or: Abort(.notFound))
-    }
-    
-    func deleteAppointmentHandler(_ req: Request) -> EventLoopFuture<HTTPStatus> {
+    func deleteAppointmentHandler(_ req: Request) -> EventLoopFuture<Response> {
         Appointment.find(req.parameters.get("appointmentID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { appointment in
                 appointment.delete(on: req.db)
-                    .transform(to: .noContent)
+                    .transform(to: req.redirect(to: "/appointments"))
             }
     }
     
-    func indexHandler(_ req: Request) -> EventLoopFuture<View> {
-        Appointment.query(on: req.db).all().flatMap { appointments in
-            let context = IndexContext(
-                title: "Appointments",
-                appointments: appointments)
+    func indexHandler(_ req: Request) throws -> EventLoopFuture<View> {
+        let user = try req.auth.require(User.self)
+        
+        return user.$appointments.get(on: req.db).flatMap { appointments in
+            let context = IndexContext(appointments: appointments)
+            
             return req.view.render("appointments", context)
         }
     }
@@ -44,17 +41,33 @@ struct AppointmentController: RouteCollection {
         Appointment.find(req.parameters.get("appointmentID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { appointment in
-                appointment.$user.get(on: req.db).flatMap { user in
-                    let context = AppointmentContext (title: appointment.name, appointment: appointment, user: user)
-                    print(appointment.date)
-                    return req.view.render("appointment", context)
+                appointment.$user2.get(on: req.db).flatMap { user2 in
+                        let context = AppointmentContext(title: appointment.name, appointment: appointment, user: user2)
+                        
+                        return req.view.render("appointment", context)
                 }
             }
     }
     
     // MARK: - CREATE APPOINTMENT BUTTONS AND HANDLERS
-    func createAppointmentHandler(_ req: Request) -> EventLoopFuture<View> {
-        return req.view.render("newAppointment")
+    func createAppointmentHandler(_ req: Request) throws -> EventLoopFuture<View> {
+        let user = try req.auth.require(User.self)
+        
+        return User.query(on: req.db).all().flatMap { users in
+            let filteredUsers = users.filter {
+                if user.role == .employee {
+                    return $0.role == .patient
+                } else if user.role == .patient {
+                    return $0.role == .employee
+                } else {
+                    return false
+                }
+            }
+            
+            
+            let context = CreateAppointmentContext(users: filteredUsers, role: user.role)
+            return req.view.render("newAppointment", context)
+        }
     }
     
     func createAppointmentPostHandler(_ req: Request) throws -> EventLoopFuture<Response> {
@@ -63,11 +76,15 @@ struct AppointmentController: RouteCollection {
         
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
+        let userID2 = UUID.init(uuidString: data.id)
+        
         let appointment = Appointment(
             name: data.name,
             description: data.description,
             date: date,
-            userID: userID)
+            userID: userID,
+            userID2: userID2!
+        )
         
         return appointment.save(on: req.db).transform(to: req.redirect(to: "/appointments"))
     }
@@ -75,16 +92,22 @@ struct AppointmentController: RouteCollection {
 }
 
 // MARK: - STRUCTS
+struct CreateAppointmentContext: Encodable {
+    let title = "New Appointment"
+    let users: [User]
+    let role: Role
+}
+
 struct CreateAppointmentData: Content {
     let name: String
     let description: String
     let date: String
     let time: String
-    let userID: User
+    let id: String
 }
 
 struct IndexContext: Encodable {
-    let title: String
+    let title = "Appointments"
     let appointments: [Appointment]
 }
 
@@ -98,11 +121,6 @@ struct UserContext: Encodable {
     let title: String
     let user: User
     let appointments: [Appointment]
-}
-
-struct CreateAppointmentContext: Encodable {
-    let title = "New Appointment"
-    let users: [User]
 }
 
 //MARK: QUERIES

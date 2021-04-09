@@ -26,14 +26,18 @@ final class Appointment: Model, Encodable {
     @Parent(key: "userID")
     var user: User
     
-    init() { }
+    @Parent(key: "userID2")
+    var user2: User
     
-    init(id:UUID? = nil, name: String, description: String, date: String, userID: User.IDValue){
+    init() {}
+    
+    init(id:UUID? = nil, name: String, description: String, date: String, userID: User.IDValue, userID2: User.IDValue){
         self.id = id
         self.name = name
         self.description = description
         self.date = date
         self.$user.id = userID
+        self.$user2.id = userID2
     }
 }
 

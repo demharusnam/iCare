@@ -26,11 +26,13 @@
           </div>
     <!-- 7 -->
         <div class = "form-group">
-            <label for = "doctor">Doctor</label>
-            <select name = "doctor" class = "form-control" id = "doctor">
-                <option value = "#(doctor)">
-                    
+            <label for = "id">#if(role == .employee): Patient #else: Doctor #endif</label>
+            <select name = "id" class = "form-control" id = "id">
+                #for(user in users):
+                <option value = "#(user.id)" >
+                    #(user.firstName) #(user.lastName)
                 </option>
+                #endfor
             </select>
         </div>
             
