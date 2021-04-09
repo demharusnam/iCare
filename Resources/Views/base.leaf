@@ -26,7 +26,7 @@
                         <a class = "nav-link" href = "/register"> Register </a>
                     </li>
                     <li class = "nav-item #if(title == "Home page"): active #endif">
-                        <a href = "/" class = "nav-link"> Visitor </a>
+                        <a href = "/visitor" class = "nav-link"> Visitor </a>
                     </li>
                     <li class = "nav-item #if(title == "Home page"): active #endif">
                         <a href = "/" class = "nav-link"> Logout </a>

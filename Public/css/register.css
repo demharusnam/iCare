@@ -30,3 +30,8 @@
 .registerbox label{
     color: #376D4B;
 }
+
+.link {
+    text-decoration: none;
+    color: #81CE9D;
+}
