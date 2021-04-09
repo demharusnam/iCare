@@ -7,9 +7,12 @@
             <h2>#(appointment.description)</h2>
             <h3>#(date)</h3>
             <p> created by <a href = "/users/#(user.id)/"> #(user.firstName)</a></p>
+            
+            <button type="submit" class="btn btn-primary">
+              Delete
+            </button>
         #endexport
    #endextend
-   
    
 </body>
 </html>

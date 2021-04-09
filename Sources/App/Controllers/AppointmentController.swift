@@ -80,6 +80,7 @@ struct CreateAppointmentData: Content {
     let description: String
     let date: String
     let time: String
+    let userID: User
 }
 
 struct IndexContext: Encodable {
