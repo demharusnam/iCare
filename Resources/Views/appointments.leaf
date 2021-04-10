@@ -4,7 +4,7 @@
     #extend("index"):
         #export("content"):
             <div class = "titleNbutton">
-                <h1 class = "header"> #(user.firstName) #(title) <button type="submit" class="btn btn-primary"><a href = "/appointments/new">+</a></button></h1>
+                <h1 class = "header"> #(user.firstName) #(title) <button type="submit" class="btn btn-primary"><a class = "create" href = "/appointments/new">+</a></button></h1>
             </div>
             #if(appointments):
                 #for(appointment in appointments):

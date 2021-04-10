@@ -27,4 +27,9 @@ button:hover {
     opacity: 90%;
 }
 
+.create {
+    text-decoration: none;
+    color: #81CE9D;
+}
+
 
