@@ -34,3 +34,16 @@
 .card {
     margin: 5px;
 }
+
+
+img {
+    height: 200px;
+}
+
+.vines2 {
+    transform: rotate(-90deg);
+    position: absolute;
+    left:86.25%;
+    top: 25%;
+}
+

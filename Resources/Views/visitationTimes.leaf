@@ -15,6 +15,9 @@
 <body>
     #extend("base"):
     #export("content"):
+    <div class = "vines">
+        
+    </div>
     <div class = "timeContainer">
         <h1 class = "title"> Visitation Times for Josh#(user.firstName)</h1>
             <div class = "cards">
@@ -50,6 +53,11 @@
             </div>
             </div>
     </div>
+    <div class = "vines1">
+        <img src = "/images/vine.jpg"/>
+        <img class = "vines2"src = "/images/vine.jpg"/>
+    </div>
+    
     #endexport
     #endextend
 </body>
