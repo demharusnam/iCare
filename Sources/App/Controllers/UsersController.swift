@@ -80,8 +80,17 @@ struct UsersController: RouteCollection {
     func registerPostHandler(_ req: Request) throws -> EventLoopFuture<Response> {
         do {
             try RegisterData.validate(content: req)
+            let data = try req.content.decode(RegisterData.self)
+            guard data.password == data.confirmPassword else {
+                throw Abort(.badRequest, reason: "Passwords did not match")
+            }
         } catch let error as ValidationsError {
             let message = error.description
+            let context = RegisterContext(message: message, registrationError: true)
+            
+            return req.view.render("register", context).encodeResponse(for: req)
+        } catch is AbortError {
+            let message = "Passwords did not match."
             let context = RegisterContext(message: message, registrationError: true)
             
             return req.view.render("register", context).encodeResponse(for: req)
