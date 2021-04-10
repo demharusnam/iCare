@@ -11,6 +11,8 @@ import Vapor
 struct VisitationController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let visitorRoutes = routes.grouped("visitor")
+        visitorRoutes.get(use: indexHandler)
+        
         visitorRoutes.get("register", use: getVisitationHandler)
         visitorRoutes.post("register",use: createVisitorPostHandler)
         
@@ -20,7 +22,8 @@ struct VisitationController: RouteCollection {
         visitorRoutes.get("screening","fail", use: failScreenHandler)
         visitorRoutes.post("screening","fail", use: failScreenPostHandler)
 
-        visitorRoutes.get("visitation-times", use: getVisitationTimesHandler)
+        visitorRoutes.get("visitation-times", use: indexHandler)
+        visitorRoutes.get("visitation-times", ":patient", use: getVisitationTimesHandler)
     }
     
     func indexHandler(_ req: Request) -> Response {
@@ -86,7 +89,8 @@ struct VisitationController: RouteCollection {
                     lastName: data.lastName
                 )
                 
-                return visitor.save(on: req.db).transform(to: req.redirect(to: "/visitor/visitation-times"))
+                
+                return visitor.save(on: req.db).transform(to: req.redirect(to: "visitation-times/\(data.username)"))
             }
             
             let context = CreateVisitorContext(error: true)
@@ -94,8 +98,18 @@ struct VisitationController: RouteCollection {
         }
     }
     
-    func getVisitationTimesHandler(_ req: Request) -> EventLoopFuture<View> {
-        return req.view.render("visitationTimes")
+    func getVisitationTimesHandler(_ req: Request) -> EventLoopFuture<Response> {
+        User.query(on: req.db).all().flatMap { users in
+            let username: String = req.parameters.get("patient") ?? ""
+            let user = users.first(where: { $0.username == username && $0.role == .patient })
+            
+            if let user = user {
+                let context = VisitationTimeContext(user: user)
+                return req.view.render("visitationTimes", context).encodeResponse(for: req)
+            }
+            
+            return req.eventLoop.future(req.redirect(to: "screening"))
+        }
     }
     
 }
@@ -127,4 +141,8 @@ struct CreateVisitorData: Content {
     let lastName: String
     let username: String
     let message: String
+}
+
+struct VisitationTimeContext: Encodable {
+    let user: User
 }

@@ -19,7 +19,7 @@
         
     </div>
     <div class = "timeContainer">
-        <h1 class = "title"> Visitation Times for Josh#(user.firstName)</h1>
+        <h1 class = "title"> Visitation Times for #(user.firstName) #(user.lastName) (#(user.username))</h1>
             <div class = "cards">
             <div class="card">
               <div class="card-body">
