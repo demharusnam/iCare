@@ -30,21 +30,43 @@ struct AppointmentController: RouteCollection {
     func indexHandler(_ req: Request) throws -> EventLoopFuture<View> {
         let user = try req.auth.require(User.self)
         
-        return user.$appointments.get(on: req.db).flatMap { appointments in
-            let context = IndexContext(appointments: appointments)
-            
-            return req.view.render("appointments", context)
+        if user.role == .patient {
+            return user.$appointmentsP.get(on: req.db).flatMap { appointments in
+                print("count: \(appointments.count)")
+                
+                let context = IndexContext(appointments: appointments)
+                
+                return req.view.render("appointments", context)
+            }
+        } else {
+            return user.$appointmentsD.get(on: req.db).flatMap { appointments in
+                print("count: \(appointments.count)")
+                
+                let context = IndexContext(appointments: appointments)
+                
+                return req.view.render("appointments", context)
+            }
         }
     }
     
-    func appointmentHandler(_ req: Request) -> EventLoopFuture<View> {
-        Appointment.find(req.parameters.get("appointmentID"), on: req.db)
+    func appointmentHandler(_ req: Request) throws -> EventLoopFuture<View> {
+        let user = try req.auth.require(User.self)
+        
+        return Appointment.find(req.parameters.get("appointmentID"), on: req.db)
             .unwrap(or: Abort(.notFound))
             .flatMap { appointment in
-                appointment.$user2.get(on: req.db).flatMap { user2 in
-                        let context = AppointmentContext(title: appointment.name, appointment: appointment, user: user2)
-                        
-                        return req.view.render("appointment", context)
+                if user.role == .patient {
+                    return appointment.$doctor.get(on: req.db).flatMap { user2 in
+                            let context = AppointmentContext(title: appointment.name, appointment: appointment, user: user2)
+                            
+                            return req.view.render("appointment", context)
+                    }
+                } else {
+                    return appointment.$patient.get(on: req.db).flatMap { user2 in
+                            let context = AppointmentContext(title: appointment.name, appointment: appointment, user: user2)
+                            
+                            return req.view.render("appointment", context)
+                    }
                 }
             }
     }
@@ -76,14 +98,14 @@ struct AppointmentController: RouteCollection {
         
         let user = try req.auth.require(User.self)
         let userID = try user.requireID()
-        let userID2 = UUID.init(uuidString: data.id)
+        let userID2 = UUID.init(uuidString: data.id)!
         
         let appointment = Appointment(
             name: data.name,
             description: data.description,
             date: date,
-            userID: userID,
-            userID2: userID2!
+            userID: user.role == .patient ? userID : userID2,
+            userID2: user.role == .patient ? userID2 : userID
         )
         
         return appointment.save(on: req.db).transform(to: req.redirect(to: "/appointments"))

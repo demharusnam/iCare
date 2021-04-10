@@ -26,8 +26,11 @@ final class User: Model, Content {
     @Field(key: "password")
     var password: String
     
-    @Children(for: \.$user)
-    var appointments: [Appointment]
+    @Children(for: \.$patient)
+    var appointmentsP: [Appointment]
+    
+    @Children(for: \.$doctor)
+    var appointmentsD: [Appointment]
     
     @Enum(key: "role")
     var role: Role

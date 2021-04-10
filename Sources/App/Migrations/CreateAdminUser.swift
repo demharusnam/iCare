@@ -19,7 +19,7 @@ struct CreateAdminUser: Migration {
         }
         
         let admin = User(firstName: "Admin", lastName: "Admin", username: "admin", password: passwordHash, role: .admin)
-        let doctor = User(firstName: "Doctor", lastName: "Doctor", username: "testdoc", password: passwordHash, role: .employee)
+        let doctor = User(firstName: "Test", lastName: "Doctor", username: "testdoc", password: passwordHash, role: .employee)
      
         _ = admin.save(on: database)
         return doctor.save(on: database)

@@ -24,10 +24,10 @@ final class Appointment: Model, Encodable {
     var date: String
     
     @Parent(key: "userID")
-    var user: User
+    var patient: User
     
     @Parent(key: "userID2")
-    var user2: User
+    var doctor: User
     
     init() {}
     
@@ -36,8 +36,8 @@ final class Appointment: Model, Encodable {
         self.name = name
         self.description = description
         self.date = date
-        self.$user.id = userID
-        self.$user2.id = userID2
+        self.$patient.id = userID
+        self.$doctor.id = userID2
     }
 }
 
